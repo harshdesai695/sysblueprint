@@ -16,7 +16,7 @@ import {
   MarkerType,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { DiagramNode, DiagramEdge } from '@/data/system-details';
+import type { DiagramNode, DiagramEdge } from '@/data/system-details/index';
 import { ComponentPanel, ConnectionInfo } from './ComponentPanel';
 
 interface ArchDiagramProps {

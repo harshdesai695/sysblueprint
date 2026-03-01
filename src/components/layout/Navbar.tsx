@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { Menu, X } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
-import { useEffect, useState } from 'react';
+import { useMounted } from '@/lib/useMounted';
 
 export function Navbar() {
   const pathname = usePathname();
@@ -56,11 +56,7 @@ export function Navbar() {
 
 function ProgressIndicator() {
   const { exploredSystems } = useAppStore();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   if (!mounted) return null;
 

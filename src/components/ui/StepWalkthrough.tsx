@@ -2,7 +2,7 @@
 
 import { useState, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Step } from '@/data/system-details';
+import type { Step } from '@/data/system-details/index';
 import { ChevronLeft, ChevronRight, Play, RotateCcw } from 'lucide-react';
 
 function formatInlineCode(text: string): ReactNode[] {

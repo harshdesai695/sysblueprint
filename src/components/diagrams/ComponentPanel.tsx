@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { X, Cpu, ArrowRightLeft } from 'lucide-react';
-import { DiagramNode } from '@/data/system-details';
+import type { DiagramNode } from '@/data/system-details/index';
 
 export interface ConnectionInfo {
   direction: 'incoming' | 'outgoing';

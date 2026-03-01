@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
 import {
   Radar,
   RadarChart,
@@ -10,7 +10,8 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts';
-import { TradeOff } from '@/data/system-details';
+import type { TradeOff } from '@/data/system-details/index';
+import { useMounted } from '@/lib/useMounted';
 
 interface TradeoffRadarProps {
   tradeoffs: TradeOff;
@@ -18,11 +19,7 @@ interface TradeoffRadarProps {
 }
 
 export function TradeoffRadar({ tradeoffs, systemName }: TradeoffRadarProps) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   const dimensionDescriptions: Record<string, string> = {
     Scalability: 'Ability to handle growing load by adding resources',
@@ -77,14 +74,15 @@ export function TradeoffRadar({ tradeoffs, systemName }: TradeoffRadarProps) {
                   fontSize: '13px',
                   maxWidth: '220px',
                 }}
-                formatter={(value: number, name: string, props: { payload: { description?: string } }) => {
-                  const desc = props.payload?.description;
+                formatter={(value, name, item): [ReactNode, string] => {
+                  const score = typeof value === 'number' ? value : Number(value ?? 0);
+                  const desc = (item?.payload as { description?: string } | undefined)?.description;
                   return [
                     <span key="v">
-                      <strong>{value}/10</strong>
+                      <strong>{score}/10</strong>
                       {desc && <span style={{ display: 'block', fontSize: '11px', color: 'var(--muted)', marginTop: '2px' }}>{desc}</span>}
                     </span>,
-                    name
+                    String(name)
                   ];
                 }}
               />
