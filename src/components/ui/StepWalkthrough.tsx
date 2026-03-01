@@ -1,9 +1,44 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Step } from '@/data/system-details';
 import { ChevronLeft, ChevronRight, Play, RotateCcw } from 'lucide-react';
+
+function formatInlineCode(text: string): ReactNode[] {
+  return text.split(/`([^`]+)`/).map((segment, i) =>
+    i % 2 === 1 ? (
+      <code
+        key={i}
+        className="px-1.5 py-0.5 rounded text-xs font-mono"
+        style={{
+          backgroundColor: 'var(--accent-light)',
+          color: 'var(--accent)',
+        }}
+      >
+        {segment}
+      </code>
+    ) : (
+      <span key={i}>{segment}</span>
+    )
+  );
+}
+
+function formatDescription(text: string): ReactNode {
+  const paragraphs = text.split('\n\n');
+  if (paragraphs.length === 1) {
+    return <span>{formatInlineCode(text)}</span>;
+  }
+  return (
+    <>
+      {paragraphs.map((p, i) => (
+        <span key={i} className={i > 0 ? 'block mt-3' : 'block'}>
+          {formatInlineCode(p)}
+        </span>
+      ))}
+    </>
+  );
+}
 
 interface StepWalkthroughProps {
   steps: Step[];
@@ -88,7 +123,7 @@ export function StepWalkthrough({ steps, onStepChange }: StepWalkthroughProps) {
                 {step.title}
               </h4>
               <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
-                {step.description}
+                {formatDescription(step.description)}
               </p>
               {step.highlightNodes.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-1.5">

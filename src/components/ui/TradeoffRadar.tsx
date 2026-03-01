@@ -24,13 +24,22 @@ export function TradeoffRadar({ tradeoffs, systemName }: TradeoffRadarProps) {
     setMounted(true);
   }, []);
 
+  const dimensionDescriptions: Record<string, string> = {
+    Scalability: 'Ability to handle growing load by adding resources',
+    Availability: 'Percentage of time the system remains operational',
+    Consistency: 'All nodes see the same data at the same time',
+    Latency: 'Speed of individual request processing',
+    Durability: 'Guarantee that stored data is not lost',
+    Simplicity: 'Ease of understanding and maintaining the system',
+  };
+
   const data = [
-    { subject: 'Scalability', value: tradeoffs.scalability, fullMark: 10 },
-    { subject: 'Availability', value: tradeoffs.availability, fullMark: 10 },
-    { subject: 'Consistency', value: tradeoffs.consistency, fullMark: 10 },
-    { subject: 'Latency', value: tradeoffs.latency, fullMark: 10 },
-    { subject: 'Durability', value: tradeoffs.durability, fullMark: 10 },
-    { subject: 'Simplicity', value: tradeoffs.simplicity, fullMark: 10 },
+    { subject: 'Scalability', value: tradeoffs.scalability, fullMark: 10, description: dimensionDescriptions['Scalability'] },
+    { subject: 'Availability', value: tradeoffs.availability, fullMark: 10, description: dimensionDescriptions['Availability'] },
+    { subject: 'Consistency', value: tradeoffs.consistency, fullMark: 10, description: dimensionDescriptions['Consistency'] },
+    { subject: 'Latency', value: tradeoffs.latency, fullMark: 10, description: dimensionDescriptions['Latency'] },
+    { subject: 'Durability', value: tradeoffs.durability, fullMark: 10, description: dimensionDescriptions['Durability'] },
+    { subject: 'Simplicity', value: tradeoffs.simplicity, fullMark: 10, description: dimensionDescriptions['Simplicity'] },
   ];
 
   return (
@@ -44,7 +53,7 @@ export function TradeoffRadar({ tradeoffs, systemName }: TradeoffRadarProps) {
       <h3 className="font-bold text-lg mb-4" style={{ color: 'var(--text)' }}>
         Trade-off Profile
       </h3>
-      <div className="w-full h-[350px]" style={{ minHeight: '350px' }}>
+      <div className="w-full h-[300px] sm:h-[350px] lg:h-[400px]" style={{ minHeight: '280px' }}>
         {mounted && (
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={data} cx="50%" cy="50%" outerRadius="75%">
@@ -66,6 +75,17 @@ export function TradeoffRadar({ tradeoffs, systemName }: TradeoffRadarProps) {
                   borderRadius: '8px',
                   color: 'var(--text)',
                   fontSize: '13px',
+                  maxWidth: '220px',
+                }}
+                formatter={(value: number, name: string, props: { payload: { description?: string } }) => {
+                  const desc = props.payload?.description;
+                  return [
+                    <span key="v">
+                      <strong>{value}/10</strong>
+                      {desc && <span style={{ display: 'block', fontSize: '11px', color: 'var(--muted)', marginTop: '2px' }}>{desc}</span>}
+                    </span>,
+                    name
+                  ];
                 }}
               />
               <Radar
@@ -81,7 +101,7 @@ export function TradeoffRadar({ tradeoffs, systemName }: TradeoffRadarProps) {
         )}
       </div>
 
-      <div className="grid grid-cols-3 gap-3 mt-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
         {data.map((d) => (
           <div
             key={d.subject}

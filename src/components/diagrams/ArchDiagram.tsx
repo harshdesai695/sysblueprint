@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   ReactFlow,
   Background,
@@ -17,7 +17,7 @@ import {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { DiagramNode, DiagramEdge } from '@/data/system-details';
-import { ComponentPanel } from './ComponentPanel';
+import { ComponentPanel, ConnectionInfo } from './ComponentPanel';
 
 interface ArchDiagramProps {
   nodes: DiagramNode[];
@@ -25,6 +25,14 @@ interface ArchDiagramProps {
   highlightNodes?: string[];
   onNodeClick?: (nodeId: string) => void;
 }
+
+const edgeTypeStyles: Record<string, React.CSSProperties> = {
+  default: { stroke: 'var(--muted)', strokeWidth: 1.5 },
+  protocol: { stroke: 'var(--accent)', strokeWidth: 2.5 },
+  async: { stroke: 'var(--muted)', strokeWidth: 1.5, strokeDasharray: '6 3' },
+  data: { stroke: 'var(--accent)', strokeWidth: 2 },
+  control: { stroke: 'var(--muted)', strokeWidth: 1, strokeDasharray: '3 3' },
+};
 
 function CustomNode({ data, selected }: NodeProps) {
   const isHighlighted = data.highlighted;
@@ -70,37 +78,38 @@ export function ArchDiagram({ nodes: diagramNodes, edges: diagramEdges, highligh
     },
   }));
 
-  const initialEdges: Edge[] = diagramEdges.map((e) => ({
-    id: e.id,
-    source: e.source,
-    target: e.target,
-    label: e.label,
-    animated: e.animated || false,
-    style: {
-      stroke: 'var(--muted)',
-      strokeWidth: 1.5,
-    },
-    labelStyle: {
-      fill: 'var(--muted)',
-      fontSize: 11,
-      fontFamily: 'var(--font-geist-mono)',
-    },
-    labelBgStyle: {
-      fill: 'var(--bg)',
-      fillOpacity: 0.8,
-    },
-    markerEnd: {
-      type: MarkerType.ArrowClosed,
-      color: 'var(--muted)',
-      width: 15,
-      height: 15,
-    },
-  }));
+  const initialEdges: Edge[] = diagramEdges.map((e) => {
+    const styleKey = e.edgeType || 'default';
+    const baseStyle = edgeTypeStyles[styleKey] || edgeTypeStyles.default;
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+    return {
+      id: e.id,
+      source: e.source,
+      target: e.target,
+      label: e.label,
+      animated: e.animated || styleKey === 'async' || false,
+      style: baseStyle,
+      labelStyle: {
+        fill: 'var(--muted)',
+        fontSize: 11,
+        fontFamily: 'var(--font-geist-mono)',
+      },
+      labelBgStyle: {
+        fill: 'var(--bg)',
+        fillOpacity: 0.8,
+      },
+      markerEnd: {
+        type: MarkerType.ArrowClosed,
+        color: styleKey === 'protocol' || styleKey === 'data' ? 'var(--accent)' : 'var(--muted)',
+        width: 15,
+        height: 15,
+      },
+    };
+  });
 
-  // Update highlighted nodes when highlightNodes prop changes
+  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+  const [edges, , onEdgesChange] = useEdgesState(initialEdges);
+
   const updatedNodes = nodes.map((n) => ({
     ...n,
     data: {
@@ -108,6 +117,25 @@ export function ArchDiagram({ nodes: diagramNodes, edges: diagramEdges, highligh
       highlighted: highlightNodes.includes(n.id),
     },
   }));
+
+  const connections: ConnectionInfo[] = useMemo(() => {
+    if (!selectedNode) return [];
+    const incoming = diagramEdges
+      .filter((e) => e.target === selectedNode.id)
+      .map((e) => ({
+        direction: 'incoming' as const,
+        label: e.label || '',
+        nodeLabel: diagramNodes.find((n) => n.id === e.source)?.label || e.source,
+      }));
+    const outgoing = diagramEdges
+      .filter((e) => e.source === selectedNode.id)
+      .map((e) => ({
+        direction: 'outgoing' as const,
+        label: e.label || '',
+        nodeLabel: diagramNodes.find((n) => n.id === e.target)?.label || e.target,
+      }));
+    return [...incoming, ...outgoing];
+  }, [selectedNode, diagramEdges, diagramNodes]);
 
   const handleNodeClick = useCallback(
     (_: React.MouseEvent, node: Node) => {
@@ -150,6 +178,7 @@ export function ArchDiagram({ nodes: diagramNodes, edges: diagramEdges, highligh
       {selectedNode && (
         <ComponentPanel
           node={selectedNode}
+          connections={connections}
           onClose={() => setSelectedNode(null)}
         />
       )}
