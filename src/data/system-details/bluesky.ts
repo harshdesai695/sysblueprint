@@ -1,6 +1,6 @@
-import { SystemDetail } from './types';
+import type { ISystemDesign } from './types';
 
-export const blueskyDetail: SystemDetail = {
+export const blueskyDetail: ISystemDesign = {
   slug: 'bluesky',
   summary:
     'Bluesky is a decentralized social network built on the AT Protocol (Authenticated Transfer Protocol). Users own their data in Personal Data Servers (PDSes), identity is portable via DIDs, and content is aggregated by Relay nodes that crawl PDSes and feed data to App Views — application-specific indexers that power the user experience. This architecture separates identity, data, and applications.',
@@ -94,14 +94,25 @@ export const blueskyDetail: SystemDetail = {
         'Centralized platforms control what users see through opaque algorithms optimized for engagement. Bluesky\'s open feed generator protocol lets anyone build and publish feed algorithms. Users choose which feeds to subscribe to, restoring agency over their information diet. This also enables innovation — niche communities can build feeds tailored to their specific interests.',
     },
   ],
-  tradeoffs: {
-    scalability: 7,
-    availability: 7,
-    consistency: 5,
-    latency: 6,
-    durability: 8,
-    simplicity: 3,
-  },
+  plainSummary:
+    'Bluesky is like Twitter but built so no single company controls everything. Instead of one big server, it uses a network of servers (the AT Protocol) where anyone can host their own data. Your account, posts, and followers travel with you if you switch servers — like keeping your phone number when you change carriers.',
+
+  flowSteps: [
+    { emoji: '✍️', title: 'You write a post', description: 'You type a short message (called a "skeet") in the Bluesky app.' },
+    { emoji: '📦', title: 'Post is stored in your PDS', description: 'Your Personal Data Server stores the post in your data repository — you own it.' },
+    { emoji: '🔗', title: 'A relay picks it up', description: 'The relay (called the "Big Graph Service") aggregates posts from all servers into one stream.' },
+    { emoji: '🏷️', title: 'Post gets labeled', description: 'Labelers (moderation services) tag content for safety, topics, or community guidelines.' },
+    { emoji: '📰', title: 'Your feed is built', description: 'Custom feed generators filter and rank posts based on your preferences and who you follow.' },
+    { emoji: '📱', title: 'You see your timeline', description: 'The app displays your personalized feed with posts, replies, and reposts.' },
+  ],
+
+  keyMetrics: [
+    { label: 'Users', value: '30M+', icon: '👥', description: 'Registered accounts' },
+    { label: 'Protocol', value: 'AT Protocol', icon: '🔗', description: 'Decentralized social protocol' },
+    { label: 'Firehose Rate', value: '~3K/s', icon: '🌊', description: 'Events per second on the relay' },
+    { label: 'Data Portability', value: '100%', icon: '📦', description: 'Users own and can export all data' },
+  ],
+
   furtherReading: [
     { title: 'How Bluesky Works — ByteByteGo', url: 'https://lnkd.in/eEhB8V_k', type: 'blog' },
     { title: 'AT Protocol Specification', url: 'https://atproto.com/specs/atp', type: 'docs' },

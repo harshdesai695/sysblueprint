@@ -1,6 +1,6 @@
-import { SystemDetail } from './types';
+import type { ISystemDesign } from './types';
 
-export const whatsappDetail: SystemDetail = {
+export const whatsappDetail: ISystemDesign = {
   slug: 'whatsapp',
   summary:
     'WhatsApp delivers 100 billion messages daily to 2+ billion users using a lean Erlang/BEAM-based architecture. Messages are end-to-end encrypted using the Signal Protocol. The system uses XMPP-derived protocol for real-time delivery, offline message queuing with Mnesia, and a remarkably small engineering team relative to its user base.',
@@ -102,14 +102,26 @@ export const whatsappDetail: SystemDetail = {
         'Storing messages would create a massive target for attackers and government subpoenas. By deleting messages after delivery (and capping offline storage at 30 days), WhatsApp minimizes the data it holds. Combined with E2E encryption, even stored messages are opaque to the server, providing defense in depth.',
     },
   ],
-  tradeoffs: {
-    scalability: 9,
-    availability: 9,
-    consistency: 7,
-    latency: 9,
-    durability: 6,
-    simplicity: 6,
-  },
+  plainSummary:
+    'WhatsApp is like passing sealed envelopes between friends through a chain of trusted couriers. Your messages are locked (encrypted) on your phone so only the recipient can open them — not even WhatsApp can read them. The service handles billions of these sealed messages every day.',
+
+  flowSteps: [
+    { emoji: '✍️', title: 'You write a message', description: 'You type a message in the WhatsApp app on your phone.' },
+    { emoji: '🔒', title: 'Message is encrypted', description: 'Your phone locks the message with a special key that only the recipient\'s phone has. Even WhatsApp can\'t read it.' },
+    { emoji: '📡', title: 'Message travels to server', description: 'The encrypted message is sent over the internet to WhatsApp\'s servers.' },
+    { emoji: '📬', title: 'Server stores it briefly', description: 'If the recipient is offline, the server holds the message until they come back online.' },
+    { emoji: '📲', title: 'Recipient gets the message', description: 'When the recipient\'s phone connects, the server delivers the encrypted message.' },
+    { emoji: '🔓', title: 'Message is decrypted', description: 'The recipient\'s phone uses its private key to unlock and display the message.' },
+    { emoji: '✅', title: 'Read receipts sent back', description: 'Blue check marks confirm the message was delivered and read.' },
+  ],
+
+  keyMetrics: [
+    { label: 'Daily Messages', value: '100B+', icon: '💬', description: 'Messages sent per day globally' },
+    { label: 'Monthly Users', value: '2.7B', icon: '👥', description: 'Monthly active users worldwide' },
+    { label: 'Encryption', value: 'E2E', icon: '🔒', description: 'End-to-end encryption by default' },
+    { label: 'Erlang Connections', value: '2M/server', icon: '⚡', description: 'Concurrent connections per server' },
+  ],
+
   furtherReading: [
     { title: 'How WhatsApp Works — ByteByteGo', url: 'https://lnkd.in/eU2fswMi', type: 'blog' },
     { title: 'WhatsApp Encryption Overview (Technical Whitepaper)', url: 'https://www.whatsapp.com/security/WhatsApp-Security-Whitepaper.pdf', type: 'paper' },

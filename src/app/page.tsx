@@ -65,7 +65,7 @@ export default function HomePage() {
               style={{ color: 'var(--muted)' }}
             >
               Interactive visual guides to the architecture of 15 systems that power the internet.
-              Diagrams, step-by-step flows, and trade-off analysis.
+              Diagrams, step-by-step flows, and key metrics — in technical or plain language.
             </p>
           </motion.div>
 

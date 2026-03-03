@@ -1,6 +1,6 @@
-import { SystemDetail } from './types';
+import type { ISystemDesign } from './types';
 
-export const twitterTimelineDetail: SystemDetail = {
+export const twitterTimelineDetail: ISystemDesign = {
   slug: 'twitter-timeline',
   summary:
     'Twitter\'s timeline system combines fan-out-on-write for regular users with fan-out-on-read for high-follower accounts. When a user tweets, the tweet is pushed into the timeline caches of all followers (up to a threshold). Celebrity tweets are mixed in at read time. The ranking model uses a deep neural network to score tweet relevance based on engagement predictions.',
@@ -90,14 +90,25 @@ export const twitterTimelineDetail: SystemDetail = {
         'Timeline reads are the most frequent operation at Twitter (every app open). Redis sorted sets provide O(log n) insertion and O(log n + k) range queries with sub-millisecond latency. The timeline cache is ephemeral — if lost, it can be reconstructed from the tweet store and social graph. This makes Redis ideal: fast reads, acceptable data loss semantics.',
     },
   ],
-  tradeoffs: {
-    scalability: 9,
-    availability: 9,
-    consistency: 5,
-    latency: 8,
-    durability: 7,
-    simplicity: 4,
-  },
+  plainSummary:
+    'Twitter\'s timeline is like a newspaper that\'s custom-printed for you every second. When you open Twitter, it gathers tweets from everyone you follow, sprinkles in algorithm-picked content, ranks everything by relevance, and delivers a personalized feed — all in about 200 milliseconds.',
+
+  flowSteps: [
+    { emoji: '📝', title: 'Someone tweets', description: 'A user posts a tweet, which goes to Twitter\'s servers.' },
+    { emoji: '📬', title: 'Tweet is fanned out', description: 'The tweet is pushed into the timelines of all followers — pre-computed and ready to read.' },
+    { emoji: '📱', title: 'You open Twitter', description: 'When you open the app, it requests your home timeline.' },
+    { emoji: '🏆', title: 'Tweets are ranked', description: 'An ML model scores each tweet by predicted engagement — likes, retweets, replies, time spent.' },
+    { emoji: '🎯', title: 'Algorithmic content is mixed in', description: 'Tweets from people you don\'t follow but might like are added to your feed.' },
+    { emoji: '📰', title: 'Your feed appears', description: 'The ranked, mixed timeline is displayed on your screen, ready to scroll.' },
+  ],
+
+  keyMetrics: [
+    { label: 'Daily Users', value: '250M+', icon: '👥', description: 'Daily active users' },
+    { label: 'Tweets/Day', value: '500M+', icon: '📝', description: 'Tweets posted per day' },
+    { label: 'Feed Latency', value: '<200ms', icon: '⚡', description: 'Time to generate a timeline' },
+    { label: 'Fanout', value: '~300M/min', icon: '📬', description: 'Timeline deliveries per minute' },
+  ],
+
   furtherReading: [
     { title: 'How Twitter Timeline Works — ByteByteGo', url: 'https://lnkd.in/eniXMPfU', type: 'blog' },
     { title: 'Twitter\'s Timeline at Scale (InfoQ)', url: 'https://www.infoq.com/presentations/Twitter-Timeline-Scalability/', type: 'video' },

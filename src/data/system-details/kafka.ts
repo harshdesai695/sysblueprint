@@ -1,6 +1,6 @@
-import { SystemDetail } from './types';
+import type { ISystemDesign } from './types';
 
-export const kafkaDetail: SystemDetail = {
+export const kafkaDetail: ISystemDesign = {
   slug: 'kafka',
   summary:
     'Apache Kafka is a distributed event streaming platform built around an append-only commit log. Producers write records to topic partitions, which are replicated across brokers for fault tolerance. Consumers read from partitions using offset-based tracking, enabling replay and exactly-once semantics. Kafka handles trillions of messages per day at LinkedIn.',
@@ -102,14 +102,25 @@ export const kafkaDetail: SystemDetail = {
         'Retaining messages for a configurable period (hours to forever) enables powerful patterns: consumer replay for reprocessing, new consumers reading historical data, debugging production issues by replaying events, and multiple consumer groups independently consuming the same data. This transforms Kafka from a queue into a distributed commit log.',
     },
   ],
-  tradeoffs: {
-    scalability: 10,
-    availability: 9,
-    consistency: 7,
-    latency: 7,
-    durability: 9,
-    simplicity: 5,
-  },
+  plainSummary:
+    'Kafka is like a super-fast post office for data. Instead of delivering letters to mailboxes, it takes streams of data (messages) from many senders (producers) and delivers them to many receivers (consumers) — all in real time, never losing a message, and handling millions of deliveries per second.',
+
+  flowSteps: [
+    { emoji: '📤', title: 'A producer sends data', description: 'An application sends a message (like a log entry or event) to Kafka.' },
+    { emoji: '📋', title: 'Message goes to a topic', description: 'Messages are organized by topic — like sorting mail into different mailboxes by category.' },
+    { emoji: '🗂️', title: 'Topic is split into partitions', description: 'Each topic is divided into partitions so multiple servers can share the load.' },
+    { emoji: '💾', title: 'Data is written to disk', description: 'Messages are appended to an ordered log file on disk — fast and reliable.' },
+    { emoji: '🔄', title: 'Copies are made', description: 'Each partition is replicated to other servers, so data survives even if a machine fails.' },
+    { emoji: '📥', title: 'Consumers read the data', description: 'Applications subscribe to topics and pull messages at their own pace, tracking their position.' },
+  ],
+
+  keyMetrics: [
+    { label: 'Throughput', value: '2M msgs/s', icon: '⚡', description: 'Per-cluster message throughput' },
+    { label: 'Latency', value: '<10ms', icon: '⏱️', description: 'End-to-end produce-to-consume latency' },
+    { label: 'Daily Events', value: '7T+ (LinkedIn)', icon: '📊', description: 'Messages processed per day at LinkedIn' },
+    { label: 'Retention', value: 'Days–∞', icon: '💾', description: 'Configurable message retention period' },
+  ],
+
   furtherReading: [
     { title: 'How Kafka Works — ByteByteGo', url: 'https://lnkd.in/eTtVAjTg', type: 'blog' },
     { title: 'Kafka: a Distributed Messaging System for Log Processing', url: 'https://www.microsoft.com/en-us/research/publication/kafka-a-distributed-messaging-system-for-log-processing/', type: 'paper' },

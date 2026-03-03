@@ -1,6 +1,6 @@
-import { SystemDetail } from './types';
+import type { ISystemDesign } from './types';
 
-export const spotifyDetail: SystemDetail = {
+export const spotifyDetail: ISystemDesign = {
   slug: 'spotify',
   summary:
     'Spotify streams 100+ million tracks to 600+ million users by combining audio delivery via CDN with a sophisticated recommendation ecosystem. Audio files are stored in multiple quality tiers (Ogg Vorbis, AAC, FLAC), cached at edge nodes, and streamed with gapless playback. Discover Weekly and personalized playlists are powered by collaborative filtering, NLP on lyrics/reviews, and audio feature analysis.',
@@ -92,14 +92,25 @@ export const spotifyDetail: SystemDetail = {
         'Real-time event streaming enables near-instant taste profile updates. If a user starts exploring jazz for the first time, their recommendations can shift within minutes rather than waiting for a nightly batch job. This responsiveness is critical for engagement — the system adapts to the user\'s current mood and context.',
     },
   ],
-  tradeoffs: {
-    scalability: 9,
-    availability: 9,
-    consistency: 6,
-    latency: 9,
-    durability: 8,
-    simplicity: 4,
-  },
+  plainSummary:
+    'Spotify is like a jukebox that knows every song ever made and learns your taste. When you press play, it fetches the song from the nearest server, streams it in tiny pieces, and starts playing before the whole file arrives. Meanwhile, AI studies your listening habits to suggest music you\'ll love.',
+
+  flowSteps: [
+    { emoji: '🔍', title: 'You search for a song', description: 'You type a song name or browse playlists in the Spotify app.' },
+    { emoji: '▶️', title: 'You press play', description: 'The app tells Spotify\'s server which track you want to hear.' },
+    { emoji: '🌐', title: 'Nearest server responds', description: 'A CDN (content delivery network) server close to you starts sending the audio file.' },
+    { emoji: '🎵', title: 'Music streams in chunks', description: 'The song is sent in small pieces. Playback starts after the first few chunks arrive — no waiting for the full download.' },
+    { emoji: '📊', title: 'Your listen is recorded', description: 'Spotify logs what you\'re listening to for artist royalties and recommendation training.' },
+    { emoji: '🤖', title: 'AI learns your taste', description: 'Machine-learning models analyze your history, combine it with millions of other users\' data, and build personalized playlists.' },
+  ],
+
+  keyMetrics: [
+    { label: 'Monthly Users', value: '675M+', icon: '👥', description: 'Monthly active users worldwide' },
+    { label: 'Tracks', value: '100M+', icon: '🎵', description: 'Songs available in the catalog' },
+    { label: 'Audio Quality', value: '320kbps', icon: '🔊', description: 'Max Ogg Vorbis streaming rate' },
+    { label: 'Daily Streams', value: '1.5B+', icon: '▶️', description: 'Songs streamed per day' },
+  ],
+
   furtherReading: [
     { title: 'How Spotify Works — ByteByteGo', url: 'https://lnkd.in/eGbWVeNW', type: 'blog' },
     { title: 'Spotify Engineering Blog', url: 'https://engineering.atspotify.com/', type: 'blog' },

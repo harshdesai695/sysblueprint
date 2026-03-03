@@ -1,6 +1,6 @@
-import { SystemDetail } from './types';
+import type { ISystemDesign } from './types';
 
-export const googleSearchDetail: SystemDetail = {
+export const googleSearchDetail: ISystemDesign = {
   slug: 'google-search',
   summary:
     'Google Search crawls billions of web pages, builds a massive inverted index, and ranks results using hundreds of signals — from PageRank link analysis to BERT-based semantic understanding. The serving stack splits queries across thousands of index shards, merges results, and returns ranked pages in under 500ms.',
@@ -105,14 +105,25 @@ export const googleSearchDetail: SystemDetail = {
         'Modern web pages increasingly rely on JavaScript to render content (React, Angular SPAs). Without executing JavaScript, the crawler would see empty pages. The Web Rendering Service runs headless Chrome to execute JS and capture the final DOM, ensuring JavaScript-rendered content is properly indexed.',
     },
   ],
-  tradeoffs: {
-    scalability: 10,
-    availability: 10,
-    consistency: 7,
-    latency: 9,
-    durability: 9,
-    simplicity: 2,
-  },
+  plainSummary:
+    'Google Search is like having a librarian who has already read every webpage on the internet. When you search, it doesn\'t go read all those pages — it looks up your words in a giant index it already built, ranks the best matches, and shows you the top results in under half a second.',
+
+  flowSteps: [
+    { emoji: '🔍', title: 'You type a search', description: 'You enter words into the search bar and press Enter.' },
+    { emoji: '🗺️', title: 'Google crawls the web', description: 'Bots called "spiders" constantly visit web pages and discover new content, following links from page to page.' },
+    { emoji: '📚', title: 'Pages are indexed', description: 'The content of each page is organized into a massive searchable index — like the index at the back of a textbook, but for the entire internet.' },
+    { emoji: '🧮', title: 'Your query is analyzed', description: 'Google figures out what you really mean — correcting typos, understanding synonyms, and detecting your intent.' },
+    { emoji: '🏆', title: 'Results are ranked', description: 'Hundreds of factors determine which pages are most relevant: page quality, freshness, your location, and many more.' },
+    { emoji: '📄', title: 'You see the results', description: 'The top results appear on your screen in about 0.2 seconds, often with snippets showing the most relevant part of each page.' },
+  ],
+
+  keyMetrics: [
+    { label: 'Queries/Day', value: '8.5B+', icon: '🔍', description: 'Daily search queries worldwide' },
+    { label: 'Index Size', value: '100+ PB', icon: '💾', description: 'Petabytes of indexed web content' },
+    { label: 'Avg Latency', value: '<200ms', icon: '⚡', description: 'Time from query to results page' },
+    { label: 'Pages Indexed', value: '400B+', icon: '📄', description: 'Total indexed web pages' },
+  ],
+
   furtherReading: [
     { title: 'How Google Search Works — ByteByteGo', url: 'https://lnkd.in/exsvNqFn', type: 'blog' },
     { title: 'The Anatomy of a Large-Scale Hypertextual Web Search Engine', url: 'https://research.google/pubs/pub334/', type: 'paper' },

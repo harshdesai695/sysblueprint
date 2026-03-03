@@ -10,12 +10,13 @@ import { useAppStore } from '@/lib/store';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { ArchDiagram } from '@/components/diagrams/ArchDiagram';
 import { StepWalkthrough } from '@/components/ui/StepWalkthrough';
-import { TradeoffRadar } from '@/components/ui/TradeoffRadar';
+import { SystemOverviewBanner } from '@/components/ui/SystemOverviewBanner';
+import { MetricGrid } from '@/components/ui/MetricCard';
+import { FlowDiagram } from '@/components/ui/FlowDiagram';
+import { SectionToggle } from '@/components/ui/SectionToggle';
 import { TagBadge } from '@/components/ui/TagBadge';
-import { DifficultyBadge } from '@/components/ui/DifficultyBadge';
 import {
   BookOpen,
-  Lightbulb,
   ExternalLink,
   FileText,
   Video,
@@ -30,7 +31,7 @@ export default function SystemDetailPage() {
   const slug = params.slug as string;
   const meta = getSystemBySlug(slug);
   const detail = getSystemDetail(slug);
-  const { markExplored } = useAppStore();
+  const { markExplored, viewMode } = useAppStore();
   const [highlightNodes, setHighlightNodes] = useState<string[]>([]);
 
   useEffect(() => {
@@ -56,12 +57,14 @@ export default function SystemDetailPage() {
   const prevSystem = currentIndex > 0 ? systems[currentIndex - 1] : null;
   const nextSystem = currentIndex < systems.length - 1 ? systems[currentIndex + 1] : null;
 
-  const readingTypeIcons = {
+  const readingTypeIcons: Record<string, typeof BookOpen> = {
     blog: BookOpen,
     paper: FileText,
     video: Video,
     docs: BookMarked,
   };
+
+  const isPlain = viewMode === 'plain';
 
   return (
     <div className="flex min-h-screen" style={{ backgroundColor: 'var(--bg)' }}>
@@ -74,94 +77,48 @@ export default function SystemDetailPage() {
           transition={{ duration: 0.4 }}
           className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
         >
-          {/* Overview Section */}
-          <section className="mb-12">
-            <div className="flex items-start gap-4 mb-6">
-              <span className="text-5xl">{meta.icon}</span>
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2 flex-wrap">
-                  <h1
-                    className="text-3xl sm:text-4xl font-bold"
-                    style={{ color: 'var(--text)' }}
-                  >
-                    {meta.name}
-                  </h1>
-                  <DifficultyBadge difficulty={meta.difficulty} />
-                </div>
-                <p className="text-lg mb-3" style={{ color: 'var(--muted)' }}>
-                  {detail.summary}
-                </p>
-                <div className="flex flex-wrap gap-1.5 mb-3">
-                  {meta.tags.map((tag) => (
-                    <TagBadge key={tag} tag={tag} />
-                  ))}
-                </div>
-                {meta.stats && (
-                  <p
-                    className="text-sm font-mono px-3 py-2 rounded-lg inline-block"
-                    style={{
-                      backgroundColor: 'var(--accent-light)',
-                      color: 'var(--accent)',
-                    }}
-                  >
-                    📊 {meta.stats}
-                  </p>
-                )}
-              </div>
-            </div>
+          {/* ── Overview Banner ── */}
+          <SystemOverviewBanner meta={meta} detail={detail} />
 
-            {/* Analogy */}
-            <div
-              className="rounded-xl p-5 flex items-start gap-3"
-              style={{
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--border)',
-              }}
-            >
-              <Lightbulb size={20} className="flex-shrink-0 mt-0.5" style={{ color: 'var(--accent)' }} />
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--accent)' }}>
-                  Simple Analogy
-                </p>
-                <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
-                  {detail.analogy}
-                </p>
-              </div>
-            </div>
-          </section>
+          {/* ── Key Metrics ── */}
+          {detail.keyMetrics && detail.keyMetrics.length > 0 && (
+            <SectionToggle title="Key Metrics" emoji="📊">
+              <MetricGrid metrics={detail.keyMetrics} />
+            </SectionToggle>
+          )}
 
-          {/* Architecture Diagram */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2" style={{ color: 'var(--text)' }}>
-              <span>🏗️</span> Architecture Diagram
-            </h2>
-            <ArchDiagram
-              nodes={detail.nodes}
-              edges={detail.edges}
-              highlightNodes={highlightNodes}
-            />
-            <p className="text-xs mt-2 text-center" style={{ color: 'var(--muted)' }}>
-              Click on any node to see its description. Use scroll to zoom, drag to pan.
-            </p>
-          </section>
+          {/* ── Architecture / Flow ── */}
+          {isPlain && detail.flowSteps && detail.flowSteps.length > 0 ? (
+            <SectionToggle title="How It Works — Simplified" emoji="🗺️">
+              <FlowDiagram steps={detail.flowSteps} />
+            </SectionToggle>
+          ) : (
+            <SectionToggle title="Architecture Diagram" emoji="🏗️">
+              <ArchDiagram
+                nodes={detail.nodes}
+                edges={detail.edges}
+                highlightNodes={highlightNodes}
+              />
+              <p className="text-xs mt-2 text-center" style={{ color: 'var(--muted)' }}>
+                Click on any node to see its description. Use scroll to zoom, drag to pan.
+              </p>
+            </SectionToggle>
+          )}
 
-          {/* Step-by-Step Walkthrough */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2" style={{ color: 'var(--text)' }}>
-              <span>📖</span> How It Works — Step by Step
-            </h2>
+          {/* ── Step-by-Step Walkthrough ── */}
+          <SectionToggle title="How It Works — Step by Step" emoji="📖">
             <StepWalkthrough steps={detail.steps} onStepChange={handleStepChange} />
-          </section>
+          </SectionToggle>
 
-          {/* Design Decisions */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2" style={{ color: 'var(--text)' }}>
-              <span>🧩</span> Key Design Decisions
-            </h2>
+          {/* ── Design Decisions ── */}
+          <SectionToggle title="Key Design Decisions" emoji="🧩">
             <div className="space-y-4">
               {detail.designDecisions.map((decision, i) => (
-                <div
+                <motion.div
                   key={i}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: i * 0.06 }}
                   className="rounded-xl p-5"
                   style={{
                     backgroundColor: 'var(--surface)',
@@ -172,26 +129,15 @@ export default function SystemDetailPage() {
                     💡 {decision.question}
                   </h4>
                   <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
-                    {decision.answer}
+                    {isPlain && decision.plainAnswer ? decision.plainAnswer : decision.answer}
                   </p>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </section>
+          </SectionToggle>
 
-          {/* Trade-offs */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2" style={{ color: 'var(--text)' }}>
-              <span>⚖️</span> Trade-offs
-            </h2>
-            <TradeoffRadar tradeoffs={detail.tradeoffs} systemName={meta.name} />
-          </section>
-
-          {/* Further Reading */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2" style={{ color: 'var(--text)' }}>
-              <span>📚</span> Further Reading
-            </h2>
+          {/* ── Further Reading ── */}
+          <SectionToggle title="Further Reading" emoji="📚">
             <div className="grid gap-3">
               {detail.furtherReading.map((item, i) => {
                 const Icon = readingTypeIcons[item.type] || BookOpen;
@@ -231,9 +177,9 @@ export default function SystemDetailPage() {
                 );
               })}
             </div>
-          </section>
+          </SectionToggle>
 
-          {/* Navigation */}
+          {/* ── Navigation ── */}
           <section className="border-t pt-8 pb-12" style={{ borderColor: 'var(--border)' }}>
             <div className="flex items-center justify-between">
               {prevSystem ? (
@@ -245,7 +191,9 @@ export default function SystemDetailPage() {
                   <ArrowLeft size={16} />
                   <span>
                     <span className="block text-xs" style={{ color: 'var(--muted)' }}>Previous</span>
-                    <span style={{ color: 'var(--text)' }}>{prevSystem.icon} {prevSystem.name.replace('How ', '').replace(' Works', '')}</span>
+                    <span style={{ color: 'var(--text)' }}>
+                      {prevSystem.icon} {prevSystem.name.replace('How ', '').replace(' Works', '')}
+                    </span>
                   </span>
                 </Link>
               ) : (
@@ -260,7 +208,9 @@ export default function SystemDetailPage() {
                 >
                   <span>
                     <span className="block text-xs" style={{ color: 'var(--muted)' }}>Next</span>
-                    <span style={{ color: 'var(--text)' }}>{nextSystem.icon} {nextSystem.name.replace('How ', '').replace(' Works', '')}</span>
+                    <span style={{ color: 'var(--text)' }}>
+                      {nextSystem.icon} {nextSystem.name.replace('How ', '').replace(' Works', '')}
+                    </span>
                   </span>
                   <ArrowRight size={16} />
                 </Link>

@@ -1,6 +1,6 @@
-import { SystemDetail } from './types';
+import type { ISystemDesign } from './types';
 
-export const redditDetail: SystemDetail = {
+export const redditDetail: ISystemDesign = {
   slug: 'reddit',
   summary:
     'Reddit serves 1.7 billion monthly visits with a content ranking system built on voting, recency, and community moderation. The architecture evolved from a Python/Pylons monolith to a microservices stack using Go and GraphQL. Massive caching in Memcached and Redis keeps hot content fast, while PostgreSQL handles persistent storage sharded by subreddit.',
@@ -91,14 +91,25 @@ export const redditDetail: SystemDetail = {
         'A comment with 1 upvote and 0 downvotes has a 100% ratio but low confidence. Wilson Score computes a confidence interval and uses the lower bound — a comment with 100 upvotes and 10 downvotes (90%, high confidence) ranks higher than one with 1 upvote and 0 downvotes (100%, low confidence). This prevents new comments with a single upvote from dominating.',
     },
   ],
-  tradeoffs: {
-    scalability: 8,
-    availability: 9,
-    consistency: 6,
-    latency: 8,
-    durability: 8,
-    simplicity: 5,
-  },
+  plainSummary:
+    'Reddit is like a massive bulletin board with thousands of topic rooms (subreddits). Anyone can post content, and the community votes it up or down. The most upvoted posts rise to the top. Behind the scenes, heavy caching and ranking algorithms keep the site fast even with millions of simultaneous visitors.',
+
+  flowSteps: [
+    { emoji: '📝', title: 'Someone posts content', description: 'A user submits a link, image, or text post to a subreddit (topic community).' },
+    { emoji: '⬆️', title: 'People vote on it', description: 'Other users upvote or downvote the post — voting determines visibility.' },
+    { emoji: '🏆', title: 'Hot posts rise to the top', description: 'A ranking algorithm considers votes, recency, and engagement to order posts on the page.' },
+    { emoji: '💬', title: 'Comments form threads', description: 'Users discuss the post in threaded comments, which are also voted on.' },
+    { emoji: '⚡', title: 'Caching keeps it fast', description: 'Popular pages and feeds are cached in memory so millions can view them without overloading databases.' },
+    { emoji: '📊', title: 'Scores update in real time', description: 'Vote counts and comment numbers update live as people interact.' },
+  ],
+
+  keyMetrics: [
+    { label: 'Daily Users', value: '73M+', icon: '👥', description: 'Daily active unique visitors' },
+    { label: 'Subreddits', value: '100K+', icon: '📋', description: 'Active communities' },
+    { label: 'Comments/Day', value: '52M+', icon: '💬', description: 'Comments posted daily' },
+    { label: 'Page Views', value: '1.7B/day', icon: '📄', description: 'Daily page views globally' },
+  ],
+
   furtherReading: [
     { title: 'How Reddit Works — ByteByteGo', url: 'https://lnkd.in/egmm_P7a', type: 'blog' },
     { title: 'Reddit Architecture (High Scalability)', url: 'http://highscalability.com/blog/2013/8/26/reddit-lessons-learned-from-mistakes-made-scaling-to-1-billi.html', type: 'blog' },

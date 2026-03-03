@@ -1,6 +1,6 @@
-import { SystemDetail } from './types';
+import type { ISystemDesign } from './types';
 
-export const amazonS3Detail: SystemDetail = {
+export const amazonS3Detail: ISystemDesign = {
   slug: 'amazon-s3',
   summary:
     'Amazon S3 provides object storage with eleven 9s (99.999999999%) durability by replicating data across multiple Availability Zones. Objects are stored in a flat namespace within buckets, with the key serving as the full path. The system uses consistent hashing for data placement, erasure coding for storage efficiency, and a metadata service backed by a distributed key-value store.',
@@ -97,14 +97,25 @@ export const amazonS3Detail: SystemDetail = {
         'S3 uses a flat key-value model — the "path" `/photos/2024/vacation/img.jpg` is just a string key, not a directory hierarchy. This simplifies the backend immensely: no need for directory metadata, rename operations, or hierarchical locking. Listing by prefix simulates directory browsing at the API level without the complexity of a filesystem.',
     },
   ],
-  tradeoffs: {
-    scalability: 10,
-    availability: 10,
-    consistency: 8,
-    latency: 7,
-    durability: 10,
-    simplicity: 7,
-  },
+  plainSummary:
+    'Amazon S3 is like an infinitely large filing cabinet in the cloud. You put files in, give each one a name, and S3 stores them across multiple buildings so they\'re never lost. Anyone with the right key can retrieve the file from anywhere in the world.',
+
+  flowSteps: [
+    { emoji: '📁', title: 'You upload a file', description: 'You send a file (called an "object") to S3 with a name (key) through the API or console.' },
+    { emoji: '🪣', title: 'It goes into a bucket', description: 'Files are organized into buckets — like top-level folders with globally unique names.' },
+    { emoji: '✂️', title: 'Large files are split', description: 'Big files are automatically broken into chunks for faster, more reliable uploads.' },
+    { emoji: '💾', title: 'Data is stored redundantly', description: 'S3 copies your file across multiple hard drives in multiple buildings within a region.' },
+    { emoji: '🔐', title: 'Access is controlled', description: 'Permissions determine who can read, write, or delete each file.' },
+    { emoji: '🌐', title: 'Anyone can retrieve it', description: 'With the right URL and permissions, the file can be downloaded from anywhere in the world.' },
+  ],
+
+  keyMetrics: [
+    { label: 'Durability', value: '99.999999999%', icon: '🛡️', description: '11 nines of data durability' },
+    { label: 'Objects Stored', value: '350T+', icon: '📦', description: 'Trillions of objects across S3' },
+    { label: 'Requests/Sec', value: '100M+', icon: '⚡', description: 'Peak aggregate request rate' },
+    { label: 'Max Object Size', value: '5 TB', icon: '📏', description: 'Maximum single object size' },
+  ],
+
   furtherReading: [
     { title: 'How Amazon S3 Works — ByteByteGo', url: 'https://lnkd.in/e2p7qXri', type: 'blog' },
     { title: 'Amazon S3 Developer Guide', url: 'https://docs.aws.amazon.com/s3/index.html', type: 'docs' },

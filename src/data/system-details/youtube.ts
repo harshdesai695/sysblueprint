@@ -1,6 +1,6 @@
-import { SystemDetail } from './types';
+import type { ISystemDesign } from './types';
 
-export const youtubeDetail: SystemDetail = {
+export const youtubeDetail: ISystemDesign = {
   slug: 'youtube',
   summary:
     'YouTube handles 500+ hours of video uploaded every minute. Each upload is transcoded into dozens of format/resolution/codec combinations, stored across a global CDN, and served adaptively using DASH/HLS. A recommendation engine powered by deep neural networks drives 70% of watch time, while a content moderation pipeline screens uploads for policy violations.',
@@ -92,14 +92,25 @@ export const youtubeDetail: SystemDetail = {
         'YouTube\'s video corpus contains billions of videos. Running a complex ranking model on every video for every user would be computationally infeasible. The candidate generation stage uses cheaper embeddings to narrow down to thousands of candidates, then the expensive ranking model with hundreds of features scores only this small set — balancing quality with computational cost.',
     },
   ],
-  tradeoffs: {
-    scalability: 10,
-    availability: 10,
-    consistency: 6,
-    latency: 8,
-    durability: 9,
-    simplicity: 3,
-  },
+  plainSummary:
+    'YouTube is like a massive TV station that anyone can broadcast on. When you upload a video, it gets converted into dozens of formats and sizes, stored across data centers worldwide, and delivered to viewers through the nearest server — all so your video plays smoothly no matter where you are or what device you\'re using.',
+
+  flowSteps: [
+    { emoji: '🎬', title: 'Creator uploads a video', description: 'A video file is uploaded through the app, website, or API.' },
+    { emoji: '🔄', title: 'Video is transcoded', description: 'The raw video is converted into multiple resolutions (144p to 4K) and formats for different devices.' },
+    { emoji: '✂️', title: 'Video is chunked', description: 'Each version is split into small segments so streaming can start immediately and adapt to your connection speed.' },
+    { emoji: '🌍', title: 'Copies spread worldwide', description: 'Video segments are cached at edge servers around the globe — closer to viewers for faster loading.' },
+    { emoji: '📺', title: 'You press play', description: 'When you watch, the video player requests segments from the nearest server and adjusts quality based on your bandwidth.' },
+    { emoji: '🤖', title: 'AI recommends more', description: 'A recommendation engine analyzes your watch history and suggests what to watch next.' },
+  ],
+
+  keyMetrics: [
+    { label: 'Hours Uploaded', value: '500/min', icon: '🎬', description: 'Hours of video uploaded per minute' },
+    { label: 'Daily Views', value: '5B+', icon: '👀', description: 'Videos watched per day worldwide' },
+    { label: 'CDN Capacity', value: '1 PB/s', icon: '🌍', description: 'Global content delivery bandwidth' },
+    { label: 'Storage', value: 'Exabytes', icon: '💾', description: 'Total video storage across Google infra' },
+  ],
+
   furtherReading: [
     { title: 'How YouTube Works — ByteByteGo', url: 'https://lnkd.in/e7q9F4Sg', type: 'blog' },
     { title: 'Deep Neural Networks for YouTube Recommendations', url: 'https://research.google/pubs/pub45530/', type: 'paper' },

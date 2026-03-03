@@ -1,6 +1,6 @@
-import { SystemDetail } from './types';
+import type { ISystemDesign } from './types';
 
-export const uberEtaDetail: SystemDetail = {
+export const uberEtaDetail: ISystemDesign = {
   slug: 'uber-eta',
   summary:
     'Uber\'s ETA computation combines real-time GPS traces from millions of drivers, historical travel time data, and road network graph algorithms. The system uses a partitioned road graph, machine learning models trained on billions of completed trips, and real-time traffic signals to produce arrival estimates accurate within minutes.',
@@ -91,14 +91,26 @@ export const uberEtaDetail: SystemDetail = {
         'H3 hexagons provide uniform area and consistent neighbor relationships (each hexagon has exactly 6 neighbors), unlike rectangular geohash cells which have edge/corner adjacency issues. This makes spatial joins, proximity lookups, and graph partitioning more uniform and efficient. H3 also supports hierarchical resolution levels from continent down to city block.',
     },
   ],
-  tradeoffs: {
-    scalability: 9,
-    availability: 9,
-    consistency: 5,
-    latency: 9,
-    durability: 6,
-    simplicity: 4,
-  },
+  plainSummary:
+    'When you request an Uber, the app tells you how long until your driver arrives. Behind the scenes, it combines live traffic data, GPS signals from millions of drivers, road maps, and machine learning to predict your arrival time — updated every few seconds.',
+
+  flowSteps: [
+    { emoji: '📱', title: 'You request a ride', description: 'You open the Uber app, enter your destination, and tap "Request."' },
+    { emoji: '📍', title: 'Your location is pinpointed', description: 'GPS and cell towers determine exactly where you are.' },
+    { emoji: '🚗', title: 'Nearby drivers are found', description: 'The system checks which drivers are close to you and available.' },
+    { emoji: '🗺️', title: 'Routes are calculated', description: 'Possible routes from the driver to you (and then to your destination) are mapped out.' },
+    { emoji: '🚦', title: 'Traffic is factored in', description: 'Real-time traffic, road closures, and historical patterns are layered onto each route.' },
+    { emoji: '🤖', title: 'AI predicts the time', description: 'A machine-learning model combines all these signals to predict how long each segment will take.' },
+    { emoji: '⏱️', title: 'You see the ETA', description: 'The estimated time appears on your screen and updates as conditions change.' },
+  ],
+
+  keyMetrics: [
+    { label: 'Rides/Day', value: '25M+', icon: '🚗', description: 'Daily rides globally' },
+    { label: 'ETA Accuracy', value: '~95%', icon: '🎯', description: 'Within 2 minutes of actual time' },
+    { label: 'Updates', value: 'Every 4s', icon: '🔄', description: 'ETA recalculation frequency' },
+    { label: 'Road Segments', value: 'Billions', icon: '🗺️', description: 'Road graph nodes tracked' },
+  ],
+
   furtherReading: [
     { title: 'How Uber Computes ETA — ByteByteGo', url: 'https://lnkd.in/eVKV2ePC', type: 'blog' },
     { title: 'Uber Engineering: ETA with Graph Neural Networks', url: 'https://www.uber.com/blog/deepeta-how-uber-predicts-arrival-times/', type: 'blog' },

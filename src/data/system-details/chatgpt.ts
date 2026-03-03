@@ -1,6 +1,6 @@
-import { SystemDetail } from './types';
+import type { ISystemDesign } from './types';
 
-export const chatgptDetail: SystemDetail = {
+export const chatgptDetail: ISystemDesign = {
   slug: 'chatgpt',
   summary:
     'ChatGPT serves a large language model built on the Transformer architecture. User prompts flow through a multi-stage pipeline: tokenization, embedding lookup, multi-head self-attention across dozens of decoder layers, and autoregressive token generation. Inference is distributed across thousands of GPUs using tensor and pipeline parallelism, with KV-cache optimization to avoid recomputing attention for prior tokens.',
@@ -110,14 +110,27 @@ export const chatgptDetail: SystemDetail = {
         'Supervised fine-tuning teaches the model to mimic human demonstrations, but can\'t capture subjective quality preferences at scale. RLHF trains a reward model on human comparisons (which output is better), then uses PPO to optimize the language model against this reward signal. This significantly improves helpfulness, reduces harmful outputs, and aligns behavior with user expectations.',
     },
   ],
-  tradeoffs: {
-    scalability: 7,
-    availability: 8,
-    consistency: 6,
-    latency: 5,
-    durability: 7,
-    simplicity: 3,
-  },
+  plainSummary:
+    'ChatGPT is like a super-smart autocomplete. You type a question, and it predicts the best next word over and over until it forms a complete answer. It uses thousands of powerful computer chips working together to do this incredibly fast.',
+
+  flowSteps: [
+    { emoji: '💬', title: 'You type a message', description: 'You write a question or prompt in the chat box and hit send.' },
+    { emoji: '🔐', title: 'Your message is checked', description: 'The system makes sure your account is valid and your message follows the rules.' },
+    { emoji: '🧩', title: 'Words become numbers', description: 'Your message is broken into small pieces called tokens — like splitting a sentence into puzzle pieces.' },
+    { emoji: '🧠', title: 'The AI thinks', description: 'The tokens flow through a massive neural network with billions of parameters. It figures out what word should come next.' },
+    { emoji: '⚡', title: 'Thousands of GPUs work together', description: 'The model is too big for one chip, so thousands of specialized processors share the work.' },
+    { emoji: '🔄', title: 'One word at a time', description: 'The AI generates your answer one word (token) at a time, each based on everything before it.' },
+    { emoji: '🛡️', title: 'Safety check', description: 'Before you see the answer, a safety system checks it for harmful or incorrect content.' },
+    { emoji: '📨', title: 'You see the answer appear', description: 'Words stream to your screen in real-time, creating the "typing" effect you see in ChatGPT.' },
+  ],
+
+  keyMetrics: [
+    { label: 'Parameters', value: '1.8T (GPT-4)', icon: '🧠', description: 'Estimated model parameter count' },
+    { label: 'Context Window', value: '128K tokens', icon: '📏', description: 'Maximum input size per request' },
+    { label: 'Daily Users', value: '100M+', icon: '👥', description: 'Estimated daily active users' },
+    { label: 'Inference GPUs', value: '~25,000', icon: '⚡', description: 'NVIDIA A100/H100 GPUs for serving' },
+  ],
+
   furtherReading: [
     { title: 'How ChatGPT Works — ByteByteGo', url: 'https://lnkd.in/emyP63Wx', type: 'blog' },
     { title: 'Attention Is All You Need (Original Transformer Paper)', url: 'https://arxiv.org/abs/1706.03762', type: 'paper' },

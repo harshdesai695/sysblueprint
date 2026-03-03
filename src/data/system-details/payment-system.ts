@@ -1,6 +1,6 @@
-import { SystemDetail } from './types';
+import type { ISystemDesign } from './types';
 
-export const paymentSystemDetail: SystemDetail = {
+export const paymentSystemDetail: ISystemDesign = {
   slug: 'payment-system',
   summary:
     'A payment system processes financial transactions through a multi-party flow: payment gateway, payment processor, card network, and issuing bank. The system must handle exactly-once processing via idempotency keys, double-entry bookkeeping for auditability, and PCI-DSS compliance for card data security. Stripe and similar processors handle hundreds of billions in annual transaction volume.',
@@ -103,14 +103,25 @@ export const paymentSystemDetail: SystemDetail = {
         'PCI-DSS compliance imposes severe requirements on any system that stores raw card numbers (annual audits, network segmentation, encryption at rest). Tokenization replaces the PAN with a non-sensitive substitute. The token can be stored freely while the actual card number exists only in a PCI-certified vault. This reduces compliance scope from the entire system to just the tokenization service.',
     },
   ],
-  tradeoffs: {
-    scalability: 8,
-    availability: 10,
-    consistency: 10,
-    latency: 7,
-    durability: 10,
-    simplicity: 4,
-  },
+  plainSummary:
+    'A payment system is like a very careful accountant who processes money transfers. When you buy something online, the system verifies your identity, checks you have enough money, contacts your bank, records every step, and makes sure money moves exactly once — even if something goes wrong halfway through.',
+
+  flowSteps: [
+    { emoji: '🛒', title: 'You click "Pay"', description: 'You enter your card details and confirm the purchase on a website or app.' },
+    { emoji: '🔐', title: 'Data is encrypted', description: 'Your payment information is encrypted and sent securely to the payment processor.' },
+    { emoji: '🏦', title: 'Bank is contacted', description: 'The processor asks your bank if you have enough funds and if the transaction looks legitimate.' },
+    { emoji: '✅', title: 'Transaction is authorized', description: 'The bank approves (or declines) the charge and puts a hold on the amount.' },
+    { emoji: '📝', title: 'Everything is recorded', description: 'Every step is written to a transaction log — creating an audit trail that can\'t be altered.' },
+    { emoji: '💰', title: 'Money settles later', description: 'The actual fund transfer between banks happens in a separate settlement process, typically within 1-2 days.' },
+  ],
+
+  keyMetrics: [
+    { label: 'Transactions/Sec', value: '65K+ (Visa)', icon: '⚡', description: 'Peak processing capacity' },
+    { label: 'Uptime', value: '99.999%', icon: '🛡️', description: 'Five-nines availability target' },
+    { label: 'Settlement', value: 'T+1 to T+2', icon: '⏰', description: 'Days to final fund settlement' },
+    { label: 'Fraud Detection', value: '<100ms', icon: '🔍', description: 'Real-time fraud check latency' },
+  ],
+
   furtherReading: [
     { title: 'How Payment System Works — ByteByteGo', url: 'https://lnkd.in/ecVw7jfi', type: 'blog' },
     { title: 'Stripe Engineering Blog — Designing Robust Payment Systems', url: 'https://stripe.com/blog/engineering', type: 'blog' },

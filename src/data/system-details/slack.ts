@@ -1,6 +1,6 @@
-import { SystemDetail } from './types';
+import type { ISystemDesign } from './types';
 
-export const slackDetail: SystemDetail = {
+export const slackDetail: ISystemDesign = {
   slug: 'slack',
   summary:
     'Slack provides real-time team messaging using a WebSocket-based architecture. Messages are delivered instantly to online users and persisted for search and history. The system handles 1.5 billion+ messages per week with features like channels, threads, reactions, file sharing, and full-text search across message history. The backend is a PHP/Hack monolith with critical real-time paths in Java and Go.',
@@ -90,14 +90,25 @@ export const slackDetail: SystemDetail = {
         'The PHP/Hack monolith contains 10+ years of business logic that works reliably. Rewriting everything would be risky and slow. Instead, Slack extracted latency-critical paths (WebSocket handling, message fan-out) into Java/Go services while keeping the monolith for less latency-sensitive operations. This pragmatic approach balances velocity with performance.',
     },
   ],
-  tradeoffs: {
-    scalability: 8,
-    availability: 9,
-    consistency: 8,
-    latency: 8,
-    durability: 8,
-    simplicity: 5,
-  },
+  plainSummary:
+    'Slack is like a giant office with thousands of rooms (channels) where teams can talk, share files, and collaborate in real time. When you send a message, it instantly appears on everyone\'s screen in that channel. Behind the scenes, WebSockets keep a live connection so messages arrive without refreshing.',
+
+  flowSteps: [
+    { emoji: '✍️', title: 'You type a message', description: 'You write a message in a Slack channel or direct message.' },
+    { emoji: '📡', title: 'It\'s sent over WebSocket', description: 'A persistent live connection sends your message to Slack\'s servers instantly — no page refresh needed.' },
+    { emoji: '💾', title: 'Message is stored', description: 'The message is saved in a database so it can be searched and scrolled through later.' },
+    { emoji: '🔔', title: 'Notifications go out', description: 'Everyone in the channel gets a notification — push notification, badge, or sound depending on their settings.' },
+    { emoji: '📺', title: 'Message appears on screens', description: 'The message instantly pops up in the channel for all members who are online.' },
+    { emoji: '🔍', title: 'It\'s searchable forever', description: 'All messages are indexed so you can search through months of conversation history.' },
+  ],
+
+  keyMetrics: [
+    { label: 'Daily Users', value: '38.8M+', icon: '👥', description: 'Daily active users worldwide' },
+    { label: 'Messages/Day', value: '1.5B+', icon: '💬', description: 'Messages sent per day' },
+    { label: 'Connected Apps', value: '2,600+', icon: '🔌', description: 'Apps in the Slack App Directory' },
+    { label: 'Uptime', value: '99.99%', icon: '🛡️', description: 'Service availability SLA' },
+  ],
+
   furtherReading: [
     { title: 'How Slack Works — ByteByteGo', url: 'https://lnkd.in/eATMDjrK', type: 'blog' },
     { title: 'Slack Engineering Blog', url: 'https://slack.engineering/', type: 'blog' },

@@ -1,6 +1,6 @@
-import { SystemDetail } from './types';
+import type { ISystemDesign } from './types';
 
-export const stockExchangeDetail: SystemDetail = {
+export const stockExchangeDetail: ISystemDesign = {
   slug: 'stock-exchange',
   summary:
     'A stock exchange matches buy and sell orders in an order book with ultra-low latency (<1 microsecond for in-memory matching). The matching engine maintains price-time priority: orders at the best price execute first, with ties broken by arrival time. The system handles millions of orders per second with deterministic processing, multicast market data dissemination, and strict regulatory requirements.',
@@ -102,14 +102,25 @@ export const stockExchangeDetail: SystemDetail = {
         'Without a CCP, each trader bears counterparty risk — if the trader on the other side of the trade defaults, you might not receive your shares or cash. Novation puts the CCP in the middle: you trade with the clearing house, not directly with the counterparty. The CCP manages this risk through margin requirements, default funds, and netting. This enables anonymous trading and reduces systemic risk.',
     },
   ],
-  tradeoffs: {
-    scalability: 7,
-    availability: 10,
-    consistency: 10,
-    latency: 10,
-    durability: 9,
-    simplicity: 2,
-  },
+  plainSummary:
+    'A stock exchange is like an incredibly fast auction house. Buyers and sellers submit their prices, and a matching engine pairs them up — the highest bidder with the lowest seller — in microseconds. Fairness and speed are critical: every order must be processed in the exact order it arrived.',
+
+  flowSteps: [
+    { emoji: '📊', title: 'Trader places an order', description: 'A trader submits a buy or sell order through their broker or trading platform.' },
+    { emoji: '🔐', title: 'Order is validated', description: 'The exchange checks the order for validity — correct symbol, sufficient margin, regulatory compliance.' },
+    { emoji: '📋', title: 'Order enters the book', description: 'The order is placed in the order book — a sorted list of all pending buy and sell orders for that stock.' },
+    { emoji: '⚡', title: 'Matching engine runs', description: 'The engine matches buy orders with sell orders by price-time priority — best prices matched first, ties broken by who arrived first.' },
+    { emoji: '🤝', title: 'Trade is executed', description: 'When a match is found, the trade happens instantly and both parties are notified.' },
+    { emoji: '📡', title: 'Market data is broadcast', description: 'Updated prices and trade information are streamed to all market participants in real time.' },
+  ],
+
+  keyMetrics: [
+    { label: 'Latency', value: '<10μs', icon: '⚡', description: 'Order-to-execution time (NASDAQ)' },
+    { label: 'Throughput', value: '1M+ orders/s', icon: '📊', description: 'Peak order processing rate' },
+    { label: 'Market Data', value: '~50GB/day', icon: '📡', description: 'Trade data broadcast daily' },
+    { label: 'Uptime', value: '99.999%', icon: '🛡️', description: 'Exchange availability requirement' },
+  ],
+
   furtherReading: [
     { title: 'How Stock Exchange Works — ByteByteGo', url: 'https://lnkd.in/eNf2QxVZ', type: 'blog' },
     { title: 'LMAX Exchange Architecture (Disruptor Pattern)', url: 'https://martinfowler.com/articles/lmax.html', type: 'blog' },

@@ -1,6 +1,6 @@
-import { SystemDetail } from './types';
+import type { ISystemDesign } from './types';
 
-export const urlShortenerDetail: SystemDetail = {
+export const urlShortenerDetail: ISystemDesign = {
   slug: 'url-shortener',
   summary:
     'A URL shortener maps long URLs to short alphanumeric codes, redirecting users when they visit the short URL. The core challenges are generating unique short codes at scale (billions of URLs), resolving redirects with minimal latency (via caching), and tracking click analytics. Systems like Bitly process billions of redirects monthly.',
@@ -80,14 +80,25 @@ export const urlShortenerDetail: SystemDetail = {
         'URL hashes (MD5/SHA256) produce fixed-length outputs but have collision potential when truncated to 7 characters. Counter-based approaches guarantee uniqueness without collision handling. Server-side generation also enables custom aliases and predictable code lengths. The tradeoff is needing a centralized or range-partitioned counter, which adds a coordination point.',
     },
   ],
-  tradeoffs: {
-    scalability: 8,
-    availability: 9,
-    consistency: 8,
-    latency: 9,
-    durability: 8,
-    simplicity: 9,
-  },
+  plainSummary:
+    'A URL shortener is like a receptionist who gives you a short room number instead of the full address. You give it a long web link, it creates a short code, and whenever someone uses that short code, the receptionist redirects them to the original long link — all in milliseconds.',
+
+  flowSteps: [
+    { emoji: '🔗', title: 'You paste a long URL', description: 'You submit a long web address to the URL shortener service.' },
+    { emoji: '🔢', title: 'A short code is generated', description: 'The service creates a unique short code (like "abc123") using a hash or counter.' },
+    { emoji: '💾', title: 'Mapping is stored', description: 'The short code → long URL mapping is saved in a database.' },
+    { emoji: '📋', title: 'You get the short link', description: 'You receive a short URL like "sho.rt/abc123" to share.' },
+    { emoji: '👆', title: 'Someone clicks it', description: 'When someone visits the short URL, the service looks up the original address.' },
+    { emoji: '↪️', title: 'They\'re redirected', description: 'The service sends a redirect response, and the browser takes the user to the original page.' },
+  ],
+
+  keyMetrics: [
+    { label: 'Redirect Latency', value: '<10ms', icon: '⚡', description: 'Time to resolve a short URL' },
+    { label: 'Links Created', value: 'Billions', icon: '🔗', description: 'Total shortened URLs in service' },
+    { label: 'Read:Write Ratio', value: '100:1', icon: '📊', description: 'Reads heavily dominate writes' },
+    { label: 'Key Space', value: '3.5T (Base62×7)', icon: '🔢', description: 'Possible unique short codes' },
+  ],
+
   furtherReading: [
     { title: 'How URL Shortener Works — ByteByteGo', url: 'https://lnkd.in/evFTZVQq', type: 'blog' },
     { title: 'System Design: URL Shortener', url: 'https://www.youtube.com/watch?v=fMZMm_0ZhK4', type: 'video' },
