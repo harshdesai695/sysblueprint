@@ -109,7 +109,6 @@ src/
 ├── lib/
 │   ├── store.ts                # Zustand store
 │   └── useMounted.ts           # SSR-safe mounted hook
-└── research/                   # Markdown research files
 ```
 
 ---
