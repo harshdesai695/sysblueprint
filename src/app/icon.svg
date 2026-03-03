@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0066ff"/>
+      <stop offset="100%" stop-color="#4d94ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="url(#g)"/>
+  <!-- Blueprint grid lines -->
+  <line x1="8" y1="6" x2="8" y2="26" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+  <line x1="16" y1="6" x2="16" y2="26" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+  <line x1="24" y1="6" x2="24" y2="26" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+  <line x1="6" y1="8" x2="26" y2="8" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+  <line x1="6" y1="16" x2="26" y2="16" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+  <line x1="6" y1="24" x2="26" y2="24" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+  <!-- Node 1 (top-left) -->
+  <rect x="7" y="7" width="6" height="4" rx="1" fill="white"/>
+  <!-- Node 2 (top-right) -->
+  <rect x="19" y="9" width="6" height="4" rx="1" fill="white"/>
+  <!-- Node 3 (bottom-left) -->
+  <rect x="7" y="21" width="6" height="4" rx="1" fill="white"/>
+  <!-- Node 4 (bottom-right) -->
+  <rect x="19" y="21" width="6" height="4" rx="1" fill="white"/>
+  <!-- Center hub -->
+  <circle cx="16" cy="16" r="3" fill="white"/>
+  <!-- Edges connecting nodes to center -->
+  <line x1="13" y1="9" x2="13.5" y2="13.5" stroke="white" stroke-width="1" stroke-linecap="round"/>
+  <line x1="19" y1="11" x2="18.5" y2="13.5" stroke="white" stroke-width="1" stroke-linecap="round"/>
+  <line x1="13" y1="23" x2="13.5" y2="18.5" stroke="white" stroke-width="1" stroke-linecap="round"/>
+  <line x1="19" y1="23" x2="18.5" y2="18.5" stroke="white" stroke-width="1" stroke-linecap="round"/>
+</svg>
