@@ -49,7 +49,6 @@ src/
 ├── lib/
 │   ├── store.ts                  # Zustand state management
 │   └── useMounted.ts             # SSR-safe mounted hook
-└── research/                     # Markdown research files
 ```
 
 ---
